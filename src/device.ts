@@ -16,6 +16,7 @@ import {
   DjiSetupWifiMessagePayload,
   DjiConfigureMessagePayload,
   DjiStartStreamingMessagePayload,
+  DjiConfirmStartStreamingMessagePayload,
 } from './message.js';
 
 const pairTransactionId = 0x8092;
@@ -502,6 +503,23 @@ export class DjiDevice {
         payload.encode(),
       ),
     );
+
+    // Patch for OA5P: Send the confirmation payload to actually start the stream.
+    // This is an exact copy of the stop-streaming command, but the last data-bit in the payload is set to 1 instead of 2.
+    // It may probably work fine sending it on all devices, but limiting it to OA5P for now.
+    if (this.model === DjiDeviceModel.osmoAction5Pro) {
+      const confirmStartStreamPayload =
+        new DjiConfirmStartStreamingMessagePayload();
+      this.writeMessage(
+        new DjiMessage(
+          stopStreamingTarget,
+          stopStreamingTransactionId,
+          stopStreamingType,
+          confirmStartStreamPayload.encode(),
+        ),
+      );
+    }
+
     this.setState(DjiDeviceState.startingStream);
   }
 

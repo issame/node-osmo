@@ -231,6 +231,13 @@ export class DjiStartStreamingMessagePayload {
   }
 }
 
+export class DjiConfirmStartStreamingMessagePayload {
+  static payload = Buffer.from([0x01, 0x01, 0x1a, 0x00, 0x01, 0x01]);
+  encode(): Buffer {
+    return DjiConfirmStartStreamingMessagePayload.payload;
+  }
+}
+
 export class DjiStopStreamingMessagePayload {
   static payload = Buffer.from([0x01, 0x01, 0x1a, 0x00, 0x01, 0x02]);
 

@@ -1,6 +1,6 @@
 # node-osmo
 
-Typescript library for controlling DJI Osmo Action 3, Action 4 and Pocket 3 using BLE (Bluetooth Low Energy)
+Typescript library for controlling DJI Osmo Action 3/4/5 and Pocket 3 using BLE (Bluetooth Low Energy)
 
 Features:
 
