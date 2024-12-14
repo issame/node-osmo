@@ -14,6 +14,16 @@ Features:
 
 This project is intended to be used with the latest Active LTS release of Node.js.
 
+## Documentation
+
+For usage examples, please check the [examples](/examples/) folder.
+Proper API documentation is coming at some point.
+
+## Known issues
+
+BLE (noble library) acts differently on each platform. I have not got this library fully stable yet.
+PRs are welcome.
+
 ## Available Scripts
 
 - `clean` - remove coverage data, Jest cache and transpiled files,
