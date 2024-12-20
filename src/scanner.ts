@@ -1,4 +1,6 @@
-import Noble, { Peripheral } from '@stoprocent/noble';
+import { Peripheral } from '@stoprocent/noble';
+import noble from '@stoprocent/noble/with-custom-binding.js';
+
 import { EventEmitter } from 'events';
 import {
   djiModelFromManufacturerData,
@@ -25,7 +27,7 @@ export class DjiDiscoveredDevice {
 export class DjiDeviceScanner extends EventEmitter {
   static shared = new DjiDeviceScanner();
   discoveredDevices: DjiDiscoveredDevice[] = [];
-  private noble?: typeof Noble;
+  private noble?: typeof noble;
 
   constructor() {
     super();
@@ -33,9 +35,7 @@ export class DjiDeviceScanner extends EventEmitter {
 
   async startScanningForDevices(): Promise<void> {
     this.discoveredDevices = [];
-    this.noble = await import('@stoprocent/noble').then(
-      (module) => module.default,
-    );
+    this.noble = noble({ extended: true });
     this.noble.on('stateChange', this.onStateChange.bind(this));
     this.noble.on('discover', this.onDiscover.bind(this));
   }
@@ -51,6 +51,8 @@ export class DjiDeviceScanner extends EventEmitter {
 
   private onStateChange(state: string): void {
     if (state === 'poweredOn') {
+      console.log('Powered on');
+      this.noble.reset();
       this.noble?.startScanningAsync([], false);
     }
   }

@@ -16,7 +16,7 @@ if (process.argv.length < 6) {
 }
 
 const deviceId = process.argv[2];
-const deviceModel = process.argv[3];
+const deviceModel = DjiDeviceModel.osmoAction4; // process.argv[3];
 const wiFiName = process.argv[4];
 const wiFiPassword = process.argv[5];
 const rtmpUrl = process.argv[6];

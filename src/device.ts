@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import noble, { Peripheral, Characteristic, Service } from '@stoprocent/noble';
-
+import { Peripheral, Characteristic, Service } from '@stoprocent/noble';
+import noble from '@stoprocent/noble/with-custom-binding.js';
 import {
   DjiDeviceModel,
   DjiDeviceModelName,
@@ -111,9 +111,7 @@ export class DjiDevice {
     this.reset();
     this.startStartStreamingTimer();
     this.setState(DjiDeviceState.discovering);
-    this.noble = await import('@stoprocent/noble').then(
-      (module) => module.default,
-    );
+    this.noble = noble({ extended: true });
     this.noble.on('stateChange', this.onStateChange.bind(this));
     this.noble.on('discover', this.onDiscover.bind(this));
   }
@@ -206,6 +204,8 @@ export class DjiDevice {
 
   private onStateChange(state: string): void {
     if (state === 'poweredOn') {
+      console.log('Powered on');
+      this.noble.reset();
       this.noble?.startScanningAsync([], false);
     }
   }
