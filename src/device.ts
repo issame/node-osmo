@@ -215,6 +215,9 @@ export class DjiDevice {
     if (peripheral.id !== this.deviceId) {
       return;
     }
+    if (this.state !== DjiDeviceState.discovering) {
+      return;
+    }
     const manufacturerData = peripheral.advertisement.manufacturerData;
     if (!manufacturerData) {
       return;
@@ -224,12 +227,17 @@ export class DjiDevice {
 
     if (peripheral.state !== 'connected') {
       console.info('dj-device: Try to connect asynchronously');
-      await peripheral.connectAsync().catch((error) => {
-        if (error) {
-          console.error('dji-device: Connection error', error);
-          isError = true;
-        }
-      });
+      await peripheral
+        .connectAsync()
+        .then(() => {
+          console.info('dji-device: Connected');
+        })
+        .catch((error) => {
+          if (error) {
+            console.error('dji-device: Connection error', error);
+            isError = true;
+          }
+        });
     } else {
       console.info('dji-device: Already connected');
     }
@@ -238,7 +246,6 @@ export class DjiDevice {
       return;
     }
 
-    console.info('dji-device: Connected');
     peripheral.discoverServices([], this.onDiscoverServices.bind(this));
     this.startStartStreamingTimer();
     this.setState(DjiDeviceState.connecting);
