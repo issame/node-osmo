@@ -14,8 +14,8 @@
     "README.md"
   ],
   "devDependencies": {
-    "@types/jest": "~29.5.13",
-    "@types/node": "~20.16.7",
+    "@types/jest": "~29.5.14",
+    "@types/node": "~20.16.15",
     "@typescript-eslint/eslint-plugin": "~7.6.0",
     "@typescript-eslint/parser": "~7.6.0",
     "eslint": "~8.56.0",
@@ -43,7 +43,7 @@
   "author": "Thomas Lekanger <datagutt@lekanger.no>",
   "license": "MIT",
   "dependencies": {
-    "@stoprocent/noble": "1.15.1",
+    "@stoprocent/noble": "^1.15.2",
     "bytebuf": "^1.2.0",
     "crc-full": "1.1.0",
     "node-osmo": "file:",
