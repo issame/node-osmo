@@ -133,6 +133,7 @@ export class DjiDevice {
     this.stopStartStreamingTimer();
     this.stopStopStreamingTimer();
     if (this.noble) {
+      this.noble.stop();
       this.noble.removeAllListeners();
       this.noble = undefined;
     }
