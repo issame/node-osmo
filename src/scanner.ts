@@ -43,6 +43,7 @@ export class DjiDeviceScanner extends EventEmitter {
   stopScanningForDevices(): void {
     this.noble?.stopScanning();
     if (this.noble) {
+      this.noble.stop();
       this.noble.removeAllListeners();
       this.noble = undefined;
     }
