@@ -328,15 +328,12 @@ export class DjiDevice {
       return;
     }
 
-    let message: DjiMessageWithData;
+    let message;
     try {
       message = new DjiMessageWithData(value);
       console.info(`dji-device: Received message ${message.format()}`);
     } catch (error) {
-      console.error(
-        'dji-device: Discarding corrupt message',
-        Buffer.from(value).toString('hex'),
-      );
+      console.error('dji-device: Error parsing message', error);
       return;
     }
 
