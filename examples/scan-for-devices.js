@@ -1,6 +1,5 @@
-import { DjiDevice } from './dist/index.js';
+import { DjiDevice, DjiDeviceScanner } from '../dist/index.js';
 
-import { DjiDeviceScanner } from './dist/index.js';
 const { shared: scanner } = DjiDeviceScanner;
 console.log('Starting DJI device scanner...');
 scanner.startScanningForDevices();
