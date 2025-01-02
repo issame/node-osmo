@@ -9,4 +9,8 @@ scanner.on('deviceDiscovered', async ({ peripheral, model, modelName }) => {
   console.log('Discovered device:', device, peripheral, model, modelName);
 });
 
-scanner.stopScanningForDevices();
+process.on('SIGINT', () => {
+  console.log('Stopping DJI device scanner...');
+  scanner.stopScanningForDevices();
+  process.exit();
+});
