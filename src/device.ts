@@ -40,6 +40,8 @@ const setupWifiType = 0x470740;
 const configureType = 0x8e0240;
 const startStreamingType = 0x780840;
 
+const fff0Id = 'fff0';
+const fff3Id = 'fff3';
 const fff4Id = 'fff4';
 const fff5Id = 'fff5';
 
@@ -57,6 +59,8 @@ enum DjiDeviceState {
   streaming,
   stoppingStream,
 }
+
+const allowedCharacteristics = [fff0Id, fff3Id, fff4Id, fff5Id];
 
 export class DjiDevice {
   private wifiSsid?: string;
@@ -274,8 +278,14 @@ export class DjiDevice {
       return;
     }
     characteristics.forEach((characteristic) => {
+      if (!allowedCharacteristics.includes(characteristic.uuid)) {
+        console.debug(
+          `dji-device: Ignoring characteristic ${characteristic.uuid}`,
+        );
+        return;
+      }
       console.info(
-        `dji-device: Discovered characteristic ${characteristic.uuid}`,
+        `dji-device: Subscribing to characteristic ${characteristic.uuid}`,
       );
       if (characteristic.uuid === fff5Id) {
         this.fff5Characteristic = characteristic;
@@ -333,7 +343,10 @@ export class DjiDevice {
       message = new DjiMessageWithData(value);
       console.info(`dji-device: Received message ${message.format()}`);
     } catch (error) {
-      console.error('dji-device: Error parsing message', error);
+      console.error(
+        `dji-device: Error parsing message from characteristic ${characteristic.uuid}`,
+        error,
+      );
       return;
     }
 
