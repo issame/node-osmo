@@ -75,7 +75,7 @@ export class DjiDevice {
   private pairPinCode?: string = 'love';
   private noble?: typeof noble;
   private cameraPeripheral?: Peripheral;
-  private fff5Characteristic?: Characteristic;
+  private fff3Characteristic?: Characteristic;
   private state: DjiDeviceState = DjiDeviceState.idle;
   private startStreamingTimer?: NodeJS.Timeout;
   private stopStreamingTimer?: NodeJS.Timeout;
@@ -140,7 +140,7 @@ export class DjiDevice {
       this.noble = undefined;
     }
     this.cameraPeripheral = undefined;
-    this.fff5Characteristic = undefined;
+    this.fff3Characteristic = undefined;
     this.batteryPercentage = undefined;
     this.setState(DjiDeviceState.idle);
   }
@@ -287,13 +287,16 @@ export class DjiDevice {
       console.info(
         `dji-device: Subscribing to characteristic ${characteristic.uuid}`,
       );
-      if (characteristic.uuid === fff5Id) {
-        this.fff5Characteristic = characteristic;
+      if (characteristic.uuid === fff3Id) {
+        this.fff3Characteristic = characteristic;
       }
       characteristic
         .subscribeAsync()
         .then(async () => {
-          console.log('subscribed', characteristic.uuid);
+          console.info(
+            'dji-device: Subscribed to characteristic',
+            characteristic.uuid,
+          );
           characteristic.on('data', (data) => {
             if (error) {
               console.error('dji-device: Characteristic read error', error);
@@ -586,10 +589,20 @@ export class DjiDevice {
     this.writeValue(message.encode());
   }
 
-  private writeValue(value: Buffer): void {
-    if (!this.fff5Characteristic) {
+  private async writeValue(value: Buffer): Promise<void> {
+    if (!this.fff3Characteristic) {
+      console.error('dji-device: No characteristic to write to');
       return;
     }
-    this.fff5Characteristic.write(value, false);
+    await this.fff3Characteristic
+      .writeAsync(value, false)
+      .then(() => {
+        console.debug('dji-device: Write successful');
+      })
+      .catch((error) => {
+        if (error) {
+          console.error('dji-device: Write error', error);
+        }
+      });
   }
 }
